@@ -1,7 +1,9 @@
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useState, useEffect } from 'react'
-import { auth } from '../lib/firebase'
+import { auth, db } from '../lib/firebase'
 import { useNavigation } from '@react-navigation/native'
+import { addDoc, doc, serverTimestamp, setDoc, Timestamp } from "firebase/firestore" 
+import moment from 'moment'
 
 const LoginScreen = () => {
 	const [email, setEmail] = useState('frisko@gmail.com')
