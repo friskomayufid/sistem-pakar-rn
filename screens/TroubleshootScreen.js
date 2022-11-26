@@ -4,18 +4,24 @@ import {
   TouchableOpacity,
   View,
   FlatList,
+  ActivityIndicator,
+  Image,
+  ScrollView,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
+import * as Progress from "react-native-progress";
 import { db } from "../lib/firebase";
 
 const TroubleshootScreen = () => {
+  const [isLoading, setLoading] = useState(false);
   const [indications, setIndications] = useState([]);
   const [problems, setProblems] = useState([]);
   const [rules, setRules] = useState([]);
 
   // INDICATIONS
   useEffect(() => {
+    setLoading(true);
     const fetchData = async () => {
       const querySnapshot = await getDocs(collection(db, "indications"));
       let arrDoc = [];
@@ -29,6 +35,7 @@ const TroubleshootScreen = () => {
       });
 
       setIndications(indications);
+      setLoading(false);
     };
 
     fetchData();
@@ -78,9 +85,10 @@ const TroubleshootScreen = () => {
   const [showScore, setShowScore] = useState(false);
   const [score, setScore] = useState(0);
   const [selected, setSelected] = useState([]);
-  const [hasil, setHasil] = useState({});
   const [probability, setProbability] = useState([]);
   const [allHasil, setAllHasil] = useState([]);
+  const [currentHasil, setCurrentHasil] = useState(0);
+  const [repeatHasil, setRepeatHasil] = useState(false);
 
   const handleAnswerClick = (answer) => {
     if (answer === true) {
@@ -98,6 +106,21 @@ const TroubleshootScreen = () => {
       calculate();
     }
   };
+
+  const handleNext = () => {
+    console.log(currentHasil, 'cirr')
+    console.log(allHasil.length, 'al')
+    if (currentHasil === 6) {
+      setRepeatHasil(true)
+    }
+
+    setCurrentHasil(currentHasil + 1);
+  };
+
+  const handleRepeat = () => {
+    setRepeatHasil(false)
+    setCurrentHasil(0)
+  }
 
   const calculate = () => {
     let probGejala = [];
@@ -216,67 +239,139 @@ const TroubleshootScreen = () => {
       (a, b) => parseFloat(b.value) - parseFloat(a.value)
     );
 
-    setAllHasil(hasil);
-
+    let semuaHasil = [];
     problems.map((item) => {
-      if (item.code === hasil[0].problem) {
-        setHasil({
-          nama: item.name,
-          keterangan: item.desc,
-          value: hasil[0].value,
-        });
-      }
+      hasil.map((res) => {
+        if (item.code === res.problem) {
+          console.log(item);
+          semuaHasil.push({
+            nama: item.name,
+            keterangan: item.desc,
+            value: res.value,
+            image: item.image,
+          });
+        }
+      });
     });
+
+    setAllHasil(semuaHasil);
+
+    console.log(allHasil, "all");
   };
 
-  return (
-    <View style={styles.container}>
-      {showScore ? (
-        <View>
-          <Text style={{ marginTop: 10 }}>Hasil Kerusakan : {hasil.nama}</Text>
-          <Text>Keterangan : {hasil.keterangan}</Text>
-          <Text>Total Kemungkinan : {hasil.value}</Text>
+  if (isLoading) {
+    return (
+      <View style={styles.loading}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 
-          <FlatList
-            data={probability}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => (
-              <View style={{ marginBottom: 10, marginTop: 10 }}>
-                <Text>Kode Problem: {item.problem}</Text>
-                <Text>Hasil: {item.value} %</Text>
-              </View>
-            )}
-          ></FlatList>
-        </View>
-      ) : (
-        <>
-          <View className="question-section">
-            <View className="question-count">
-              <Text>
-                Question {currentQuestion + 1} / {indications.length}
+  return (
+    <ScrollView>
+      <View style={styles.container}>
+        {showScore ? (
+          <View>
+            <Text
+              style={{
+                marginTop: 10,
+                textAlign: "center",
+                fontSize: 20,
+                fontWeight: "bold",
+              }}
+            >
+              Hasil Troubleshoot
+            </Text>
+            <View style={{ alignItems: "center" }}>
+              <Image
+                style={styles.image}
+                source={{
+                  uri: allHasil[currentHasil].image,
+                }}
+              />
+              <Text style={{ marginTop: 10, fontSize: 18 }}>
+                {allHasil[currentHasil].nama}
               </Text>
+              <Text style={{ marginTop: 10 }}>
+                {allHasil[currentHasil].keterangan}
+              </Text>
+
+              {repeatHasil ? (
+                <>
+                  <Text style={{ marginTop: 10 }}>Masalah belum selesai?</Text>
+                  <TouchableOpacity
+                    onPress={handleRepeat}
+                    style={styles.button}
+                    disabled={isLoading}
+                  >
+                    <Text style={styles.buttonText}>Coba Ulangi</Text>
+                  </TouchableOpacity>
+                </>
+              ) : (
+                <>
+                  <Text style={{ marginTop: 10 }}>Masalah belum selesai?</Text>
+                  <TouchableOpacity
+                    onPress={handleNext}
+                    style={styles.button}
+                    disabled={isLoading}
+                  >
+                    <Text style={styles.buttonText}>Langkah selanjutnya</Text>
+                  </TouchableOpacity>
+                </>
+              )}
             </View>
-            <View className="question-text">
-              <Text>{indications[currentQuestion]?.name}</Text>
+
+            {/* <FlatList
+              data={probability}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item }) => (
+                <View style={{ marginBottom: 10, marginTop: 10 }}>
+                  <Text>Kode Problem: {item.problem}</Text>
+                  <Text>Hasil: {item.value} %</Text>
+                </View>
+              )}
+            ></FlatList> */}
+          </View>
+        ) : (
+          <>
+            <View className="question-section">
+              <Progress.Bar
+                progress={currentQuestion * 0.06}
+                height={10}
+                width={null}
+                style={styles.progress}
+              />
+              <View>
+                <Text style={styles.questionCount}>
+                  {currentQuestion + 1} / {indications.length}
+                </Text>
+              </View>
+              <View>
+                <Text style={styles.questionText}>
+                  {indications[currentQuestion]?.name}
+                </Text>
+              </View>
             </View>
-          </View>
-          <View className="answer-section">
-            <TouchableOpacity
-              onPress={() => handleAnswerClick(true)}
-              style={styles.button}
-            >
-              <Text style={styles.buttonText}>Yes</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => handleAnswerClick(false)}
-              style={styles.button}
-            >
-              <Text style={styles.buttonText}>No</Text>
-            </TouchableOpacity>
-          </View>
-        </>
-      )}
-    </View>
+            <View className="answer-section">
+              <TouchableOpacity
+                onPress={() => handleAnswerClick(true)}
+                style={styles.button}
+                disabled={isLoading}
+              >
+                <Text style={styles.buttonText}>Ya</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => handleAnswerClick(false)}
+                style={styles.button}
+                disabled={isLoading}
+              >
+                <Text style={styles.buttonText}>Tidak</Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
+      </View>
+    </ScrollView>
   );
 };
 
@@ -285,12 +380,29 @@ export default TroubleshootScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    marginLeft: 16,
+    marginRight: 16,
+    // justifyContent: "center",
+    // alignItems: "center",
+  },
+  progress: {
+    marginTop: 20,
+    width: "100%",
+  },
+  questionCount: {
+    marginTop: 20,
+    fontSize: 18,
+    textAlign: "center",
+  },
+  questionText: {
+    fontSize: 24,
+    marginTop: 5,
+    marginBottom: 20,
+    textAlign: "center",
   },
   button: {
     backgroundColor: "#0782F9",
-    width: "60%",
+    width: "100%",
     padding: 15,
     borderRadius: 10,
     alignItems: "center",
@@ -300,5 +412,18 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "700",
     fontSize: 16,
+  },
+  loading: {
+    flex: 1,
+    justifyContent: "center",
+    flexDirection: "row",
+    justifyContent: "space-around",
+    padding: 10,
+  },
+  image: {
+    width: 200,
+    height: 230,
+    marginTop: 20,
+    textAlign: "center",
   },
 });

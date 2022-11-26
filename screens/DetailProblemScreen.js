@@ -11,8 +11,8 @@ const DetailProblemScreen = ({ route }) => {
           uri: data.image,
         }}
       />
-      <Text style={styles.title}>{data.title}</Text>
-      <Text style={styles.desc}>{data.description}</Text>
+      <Text style={styles.title}>{data.name}</Text>
+      <Text style={styles.desc}>{data.desc}</Text>
     </View>
   );
 };

@@ -8,32 +8,41 @@ import ProblemScreen from './screens/ProblemScreen';
 import { collection, addDoc } from "firebase/firestore";
 import { db } from './lib/firebase';
 import DetailProblemScreen from './screens/DetailProblemScreen';
+import {tbAturan} from './utils/createData'
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  useEffect(() => {
-    // async function createData() {
-    //   try {
-    //     const docRef = await addDoc(collection(db, "problems"), {
-    //       title: "Kerusakan LCD",
-    //       description: "LCD (Liquid Crystal Display) merupakan komponen utama dari sebuah smartphone. Saat ini mayoritas produsen menggunakan layar sentuh sebagai cara mengoperasikan smartphone produksinya. Komponen ini pun tidak lepas dari beragam masalah seperti tergores, bergaris, berkedip, retak, dan bahkan pecah.",
-    //       indication: {
-    //         0: "LCD Tergores",
-    //         1: "Ghost Touching",
-    //         2: "Screen Flickering",
-    //         3: "Dead Pixel"
-    //       }
-    //     });
-    //     console.log("Document written with ID: ", docRef.id);
-    //   } catch (e) {
-    //     console.error("Error adding document: ", e);
-    //   }
-    // }
+  // useEffect(() => {
+  //   async function createData() {
+  //     tbAturan.map(async item => {
+  //       try {
+  //         const docRef = await addDoc(collection(db, "rules"), {
+  //           id: item.ID,
+  //           code_problem: item.kode_penyakit,
+  //           code_indication: item.kode_gejala,
+  //           value: item.nilai,
+  //         }).then(() => console.log(`success ${item.ID}`));
+          
+  //         // const docRef = await addDoc(collection(db, "a"), {
+  //         //   title: "Kerusakan LCD",
+  //         //   description: "LCD (Liquid Crystal Display) merupakan komponen utama dari sebuah smartphone. Saat ini mayoritas produsen menggunakan layar sentuh sebagai cara mengoperasikan smartphone produksinya. Komponen ini pun tidak lepas dari beragam masalah seperti tergores, bergaris, berkedip, retak, dan bahkan pecah.",
+  //         //   indication: {
+  //         //     0: "LCD Tergores",
+  //         //     1: "Ghost Touching",
+  //         //     2: "Screen Flickering",
+  //         //     3: "Dead Pixel"
+  //         //   }
+  //         // });
+  //       } catch (e) {
+  //         console.error("Error adding document: ", e);
+  //       }
+  //     })
+  //   }
 
-    // createData()
+  //   // createData()
 
-  }, [])
+  // }, [])
   return (
     <NavigationContainer>
       <Stack.Navigator>

@@ -43,6 +43,8 @@ const HomeScreen = () => {
         style={styles.button}>
         <Text style={styles.buttonText}>Sign Out</Text>
       </TouchableOpacity>
+      <Text style={{marginTop: 20}}>Created By Frisko M.</Text>
+      <Text style={{marginTop: 5}}>41518110203</Text>
     </View>
   )
 }
