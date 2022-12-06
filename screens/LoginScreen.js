@@ -2,8 +2,9 @@ import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, Vi
 import React, { useState, useEffect } from 'react'
 import { auth, db } from '../lib/firebase'
 import { useNavigation } from '@react-navigation/native'
-import { addDoc, doc, serverTimestamp, setDoc, Timestamp } from "firebase/firestore" 
-import moment from 'moment'
+// import { addDoc, doc, serverTimestamp, setDoc, Timestamp } from "firebase/firestore" 
+// import moment from 'moment'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 const LoginScreen = () => {
 	const [email, setEmail] = useState('')
@@ -21,16 +22,6 @@ const LoginScreen = () => {
 		return unsubscribe
 	}, [])
 
-	const handleSignUp = () => {
-		auth
-		.createUserWithEmailAndPassword(email, password)
-		.then(userCredentials => {
-			const user = userCredentials.user
-			console.log('Register with', user.email)
-		})
-		.catch(error => alert(error.message))
-	}
-
 	const handleLogin = () => {
 		auth
 		.signInWithEmailAndPassword(email, password)
@@ -42,7 +33,7 @@ const LoginScreen = () => {
 	}
 
 	return (
-		<KeyboardAvoidingView
+		<SafeAreaView
 			style={styles.container}
 			behavior="padding"
 		>
@@ -76,7 +67,7 @@ const LoginScreen = () => {
           <Text style={styles.underLineText}>Daftar Disini</Text>
         </TouchableOpacity>
 			</View>
-		</KeyboardAvoidingView>
+		</SafeAreaView>
 	)
 }
 

@@ -9,6 +9,7 @@ import {
 import React, { useState, useEffect } from "react";
 import { auth, db } from "../lib/firebase";
 import { useNavigation } from "@react-navigation/native";
+import { SafeAreaView } from "react-native-safe-area-context";
 // import {
 //   addDoc,
 //   doc,
@@ -45,7 +46,7 @@ const RegisterScreen = () => {
   };
 
   return (
-    <KeyboardAvoidingView style={styles.container} behavior="padding">
+    <SafeAreaView style={styles.container} behavior="padding">
       <View style={styles.inputContainer}>
         <Text style={styles.title}>Daftar</Text>
         <TextInput
@@ -66,14 +67,14 @@ const RegisterScreen = () => {
       </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity onPress={handleSignUp} style={styles.button}>
-          <Text style={styles.buttonText}>Register</Text>
+          <Text style={styles.buttonText}>Daftar</Text>
         </TouchableOpacity>
         <Text style={styles.text}>Sudah Punya Akun?</Text>
         <TouchableOpacity onPress={() => navigation.navigate("Login")}>
           <Text style={styles.underLineText}>Masuk Disini</Text>
         </TouchableOpacity>
       </View>
-    </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
