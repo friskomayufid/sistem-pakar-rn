@@ -49,7 +49,7 @@ const ProblemScreen = () => {
     </View>
   );
 
-  const renderItem = ({ item }) => <Item data={item} />;
+  const renderItem = ({ item }) => <Item key={item} data={item} />;
 
   return (
     <View style={styles.container}>

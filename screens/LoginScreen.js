@@ -6,8 +6,8 @@ import { addDoc, doc, serverTimestamp, setDoc, Timestamp } from "firebase/firest
 import moment from 'moment'
 
 const LoginScreen = () => {
-	const [email, setEmail] = useState('frisko@gmail.com')
-	const [password, setPassword] = useState('frisko')
+	const [email, setEmail] = useState('')
+	const [password, setPassword] = useState('')
 
 	const navigation = useNavigation()
 
@@ -47,6 +47,7 @@ const LoginScreen = () => {
 			behavior="padding"
 		>
 			<View style={styles.inputContainer}>
+        <Text style={styles.title}>Masuk</Text>
 				<TextInput
 					placeholder='Email'
 					value={email}
@@ -70,12 +71,10 @@ const LoginScreen = () => {
 				>
 					<Text style={styles.buttonText}>Login</Text>
 				</TouchableOpacity>
-				<TouchableOpacity
-					onPress={handleSignUp}
-					style={[styles.button, styles.buttonOutline]}
-				>
-					<Text style={styles.buttonOutlineText}>Register</Text>
-				</TouchableOpacity>
+				<Text style={styles.text}>Belum Punya Akun?</Text>
+        <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+          <Text style={styles.underLineText}>Daftar Disini</Text>
+        </TouchableOpacity>
 			</View>
 		</KeyboardAvoidingView>
 	)
@@ -89,6 +88,12 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center'
 	},
+	title: {
+    fontSize: 30,
+    textAlign: "center",
+    marginBottom: 20,
+    fontWeight: "bold",
+  },
 	inputContainer: {
 		width: '80%'
 	},
@@ -127,4 +132,12 @@ const styles = StyleSheet.create({
 		fontWeight: '700',
 		fontSize: 16
 	},
+	text: {
+    marginTop: 20,
+  },
+  underLineText: {
+    color: "#0782F9",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
 })

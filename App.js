@@ -9,6 +9,7 @@ import { collection, addDoc } from "firebase/firestore";
 import { db } from './lib/firebase';
 import DetailProblemScreen from './screens/DetailProblemScreen';
 import {tbAturan} from './utils/createData'
+import RegisterScreen from './screens/RegisterScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -46,6 +47,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+        <Stack.Screen options={{ headerShown: false }} name="Register" component={RegisterScreen} />
         <Stack.Screen options={{ headerShown: false }} name="Login" component={LoginScreen} />
         <Stack.Screen options={{ headerShown: false }} name="Home" component={HomeScreen} />
         <Stack.Screen name="Troubleshoot" component={TroubleshootScreen} />

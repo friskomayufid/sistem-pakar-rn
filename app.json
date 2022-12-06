@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "sistem-pakar-hp",
-    "slug": "sistem-pakar-hp",
+    "name": "Sipaphone",
+    "slug": "sipaphone",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -21,6 +21,9 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.friskomayufid.sipaphone",
+      "versionCode": 5,
+      "permissions": [],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
@@ -28,6 +31,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "7ef1303a-7c81-4a45-bf64-247c2a3e8384"
+      }
     }
   }
 }
