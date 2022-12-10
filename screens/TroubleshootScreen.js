@@ -108,8 +108,6 @@ const TroubleshootScreen = () => {
   };
 
   const handleNext = () => {
-    console.log(currentHasil, 'cirr')
-    console.log(allHasil.length, 'al')
     if (currentHasil === 6) {
       setRepeatHasil(true)
     }
@@ -243,7 +241,6 @@ const TroubleshootScreen = () => {
     problems.map((item) => {
       hasil.map((res) => {
         if (item.code === res.problem) {
-          console.log(item);
           semuaHasil.push({
             nama: item.name,
             keterangan: item.desc,
@@ -254,9 +251,10 @@ const TroubleshootScreen = () => {
       });
     });
 
-    setAllHasil(semuaHasil);
+    let fixHasil = semuaHasil.sort((a,b) => b.value - a.value);
 
-    console.log(allHasil, "all");
+    setAllHasil(fixHasil);
+
   };
 
   if (isLoading) {
@@ -291,6 +289,9 @@ const TroubleshootScreen = () => {
               />
               <Text style={{ marginTop: 10, fontSize: 18 }}>
                 {allHasil[currentHasil].nama}
+              </Text>
+              <Text style={{ marginTop: 10 }}>
+                Prediksi : {allHasil[currentHasil].value} %
               </Text>
               <Text style={{ marginTop: 10 }}>
                 {allHasil[currentHasil].keterangan}
