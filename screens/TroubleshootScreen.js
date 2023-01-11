@@ -12,8 +12,10 @@ import React, { useState, useEffect } from "react";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import * as Progress from "react-native-progress";
 import { db } from "../lib/firebase";
+import { useNavigation } from '@react-navigation/native'
 
 const TroubleshootScreen = () => {
+  const navigation = useNavigation()
   const [isLoading, setLoading] = useState(false);
   const [indications, setIndications] = useState([]);
   const [problems, setProblems] = useState([]);
@@ -102,8 +104,13 @@ const TroubleshootScreen = () => {
     if (nextQuestion < indications.length) {
       setCurrentQuestion(nextQuestion);
     } else {
-      setShowScore(true);
-      calculate();
+      if (selected.length > 0) {
+        setShowScore(true);
+        calculate();
+      } else {
+        alert('Wajib memilih minimal 1 gejala, silahkan ulangi')
+        navigation.navigate('Home')
+      }
     }
   };
 
@@ -251,7 +258,7 @@ const TroubleshootScreen = () => {
       });
     });
 
-    let fixHasil = semuaHasil.sort((a,b) => b.value - a.value);
+    let fixHasil = semuaHasil.sort((a, b) => b.value - a.value);
 
     setAllHasil(fixHasil);
 
@@ -306,6 +313,13 @@ const TroubleshootScreen = () => {
                     disabled={isLoading}
                   >
                     <Text style={styles.buttonText}>Coba Ulangi</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate('Home')}
+                    style={styles.buttonHome}
+                    disabled={isLoading}
+                  >
+                    <Text style={styles.buttonText}>Kembali ke Dashboard</Text>
                   </TouchableOpacity>
                 </>
               ) : (
@@ -403,6 +417,14 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: "#0782F9",
+    width: "100%",
+    padding: 15,
+    borderRadius: 10,
+    alignItems: "center",
+    marginTop: 10,
+  },
+  buttonHome: {
+    backgroundColor: "#ff5b34",
     width: "100%",
     padding: 15,
     borderRadius: 10,
